@@ -9,18 +9,19 @@ from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Conv2D, MaxPool2D, Flatten, Reshape
 from keras.utils import to_categorical, plot_model
+from keras import metrics
 import warnings
 # Don't show warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 warnings.filterwarnings('ignore')
 
-print('\nPreprocessing and modelling double-stranded RNA viruses:\n target = Sedoreovirinae\n')
+print('\n\nModelling double-stranded RNA viruses:\n target = Sedoreovirinae\n')
 
 # Load the padded and encoded series of sequences
-print('loading')
-X4 = np.load('genome_array_X4.npy')
-y4 = np.load('genome_array_y4.npy')
-print('done')
+print('loading data')
+X4 = np.load('X4_genome_array.npy')
+y4 = np.load('y4_genome_array.npy')
+print('done\n')
 
 # Set up the target variable and train_test_split, with an equal proportion of target variables in test/train
 X4_train, X4_test, y4_train, y4_test = train_test_split(X4, y4, test_size = 0.33, stratify = y4)
@@ -46,6 +47,6 @@ model_4.add(Flatten())
 model_4.add(Dense(50, activation='relu'))
 model_4.add(Dense(y4.shape[1], activation='sigmoid'))
 
-model_4.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model_4.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy', metrics.binary_accuracy])
 
 model_4.fit(X4_train, y4_train, validation_data = (X4_test, y4_test), epochs = 10)
