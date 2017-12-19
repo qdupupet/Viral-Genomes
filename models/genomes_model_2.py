@@ -14,7 +14,7 @@ import warnings
 # Don't show warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 warnings.filterwarnings('ignore')
-
+print('\n-----------------------------------------------------------------------------------------------------')
 print('\n\nModelling the single-stranded RNA viruses:\n target = ssRNA positive\n')
 
 # Load the padded and encoded series of sequences
@@ -33,7 +33,7 @@ print('Baseline: 69.83%')
 
 # CNN to classify ssRNA viruses (2)
 model_2 = Sequential()
-model_2.add(Conv2D(50, kernel_size =(1,150), input_shape=(X2_train.shape[1:]), activation='relu'))
+model_2.add(Conv2D(50, kernel_size =(1,200), input_shape=(X2_train.shape[1:]), activation='relu'))
 model_2.add(MaxPool2D((1, 5)))
 model_2.add(Conv2D(40, (1,140), activation='relu'))
 model_2.add(MaxPool2D((1, 4)))
@@ -41,10 +41,15 @@ model_2.add(Conv2D(30, (1,130), activation='relu'))
 model_2.add(MaxPool2D((1, 3)))
 model_2.add(Conv2D(20, (1,120), activation='relu'))
 model_2.add(MaxPool2D((1, 2)))
+model_2.add(Conv2D(10, (1,110), activation='relu'))
+model_2.add(MaxPool2D((1, 1)))
 model_2.add(Flatten())
 model_2.add(Dense(50, activation='relu'))
 model_2.add(Dense(y2.shape[1], activation='sigmoid'))
-
-model_2.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy', metrics.binary_accuracy])
-
-model_2.fit(X2_train, y2_train, validation_data = (X2_test, y2_test), epochs = 10)
+print('\n',model_2.summary(),'\n')
+model_2.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy', metrics.binary_accuracy])
+ep = int(input('# of epochs? '))
+model_2.fit(X2_train, y2_train, validation_data = (X2_test, y2_test), epochs = ep)
+plot_model(model_2, to_file='model_2_plot.png', show_shapes=True, show_layer_names=True)
+model_2.save('model_2.h5')
+print('\n-----------------------------------------------------------------------------------------------------')

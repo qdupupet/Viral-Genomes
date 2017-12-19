@@ -15,7 +15,7 @@ import warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 warnings.filterwarnings('ignore')
 print('\n-----------------------------------------------------------------------------------------------------')
-print('\n\nModelling double-stranded DNA with no RNA stage viruses:\n target = Siphoviridae\n')
+print('\n\nModelling double-stranded DNA with no RNA stage viruses:\n target = Siphoviridae\nonly including genomes < 100,000 nt')
 
 # Load the padded and encoded series of sequences
 print('loading data...')
@@ -29,26 +29,27 @@ X3_train = X3_train.reshape(X3_train.shape[0], 1, len(X3[0]), 1)
 X3_test = X3_test.reshape(X3_test.shape[0], 1, len(X3[0]), 1)
 
 #Print a baseline (from the jupyter notebook)
-print('Baseline: 62.15%')
+print('Baseline: 52.73%')
 
 # Build and run the CNN
 model_3 = Sequential()
-model_3.add(Conv2D(50, kernel_size =(1,100), input_shape=(X3_train.shape[1:]), activation='relu'))
+model_3.add(Conv2D(50, kernel_size =(1,200), input_shape=(X3_train.shape[1:]), activation='relu'))
 model_3.add(MaxPool2D((1, 5)))
-model_3.add(Conv2D(40, (1,100), activation='relu'))
+model_3.add(Conv2D(40, (1,180), activation='relu'))
 model_3.add(MaxPool2D((1, 4)))
-model_3.add(Conv2D(30, (1,100), activation='relu'))
+model_3.add(Conv2D(30, (1,160), activation='relu'))
 model_3.add(MaxPool2D((1, 3)))
-model_3.add(Conv2D(30, (1,100), activation='relu'))
+model_3.add(Conv2D(30, (1,140), activation='relu'))
 model_3.add(MaxPool2D((1, 3)))
-model_3.add(Conv2D(20, (1,100), activation='relu'))
+model_3.add(Conv2D(20, (1,120), activation='relu'))
 model_3.add(MaxPool2D((1, 2)))
 model_3.add(Flatten())
 model_3.add(Dense(50, activation='relu'))
 model_3.add(Dense(y3.shape[1], activation='sigmoid'))
-
+print('\n',model_3.summary(),'\n')
 model_3.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy', metrics.binary_accuracy])
-
-model_3.fit(X3_train, y3_train, validation_data = (X3_test, y3_test), epochs = 10)
-
+ep = int(input('# of epochs? '))
+model_3.fit(X3_train, y3_train, validation_data = (X3_test, y3_test), epochs = ep)
+plot_model(model_3, to_file='model_1_plot.png', show_shapes=True, show_layer_names=True)
+model_3.save('model_3.h5')
 print('-----------------------------------------------------------------------------------------------------\n')

@@ -14,7 +14,7 @@ import warnings
 # Don't show warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 warnings.filterwarnings('ignore')
-
+print('\n------------------------------------------------------------------------')
 print('\n\nModelling double-stranded RNA viruses:\n target = Sedoreovirinae\n')
 
 # Load the padded and encoded series of sequences
@@ -46,7 +46,9 @@ model_4.add(MaxPool2D((1, 2)))
 model_4.add(Flatten())
 model_4.add(Dense(50, activation='relu'))
 model_4.add(Dense(y4.shape[1], activation='sigmoid'))
-
+print('\n',model_4.summary(),'\n')
 model_4.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy', metrics.binary_accuracy])
-
-model_4.fit(X4_train, y4_train, validation_data = (X4_test, y4_test), epochs = 10)
+ep = int(input('# of epochs? '))
+model_4.fit(X4_train, y4_train, validation_data = (X4_test, y4_test), epochs = ep)
+model_4.save('model_4.h5')
+print('\n------------------------------------------------------------------------')
