@@ -9,4 +9,6 @@ Viral Genomes.ipynb contains data examination/cleaning, EDA, preprocessing, and 
 
 The various model .py files were run and modified directly in the terminal after several jupyter notebook crashes, and their outputs are included in the repository as screenshots. When I have the chance I will continue to improve these models and upload the best .h5 file for each model. 
 
-The Viral Genome Report includes a complete breakdown of my process and further ideas I intend to explore. 
+The Viral Genome Report includes a complete breakdown of my process in an informal report.
+
+Moving forward, my next steps will be to improve models 0 and 5, and to attempt classifying the viruses which are listed as unclassified in the NCBI database. 
